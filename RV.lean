@@ -16,10 +16,10 @@ instance {μ : Measure E} [IsProbabilityMeasure μ] : ProbSpace (can_probSpace �
 
 noncomputable instance : ProbSpace (Ω × Ω') := ⟨inferInstance⟩
 
-structure pmp (α β : Type*) [ProbSpace α] [ProbSpace β] :=
-  (toFun : α → β)
-  (meas : Measurable toFun)
-  (map : .map toFun volume = volume)
+structure pmp (α β : Type*) [ProbSpace α] [ProbSpace β] where
+  toFun : α → β
+  meas : Measurable toFun
+  map : .map toFun volume = volume
 
 namespace pmp
 
@@ -31,11 +31,11 @@ def fst : pmp (Ω × Ω') Ω := ⟨Prod.fst, measurable_fst, by simp [volume]⟩
 
 end pmp
 
-class compatible (α₁ α₂ : Type*) [ProbSpace α₁] [ProbSpace α₂] :=
-  (α : Type*)
-  (hα : ProbSpace α)
-  (p₁ : pmp α α₁)
-  (p₂ : pmp α α₂)
+class compatible (α₁ α₂ : Type*) [ProbSpace α₁] [ProbSpace α₂] where
+  α : Type*
+  hα : ProbSpace α
+  p₁ : pmp α α₁
+  p₂ : pmp α α₂
 
 namespace compatible
 
@@ -50,9 +50,9 @@ noncomputable instance : compatible (Ω × Ω') Ω := ⟨Ω × Ω', inferInstanc
 
 end compatible
 
-@[ext] structure RV (Ω : Type*) [ProbSpace Ω] (E : Type*) [MeasurableSpace E] :=
-  (toFun : Ω → E)
-  (meas : Measurable toFun)
+@[ext] structure RV (Ω : Type*) [ProbSpace Ω] (E : Type*) [MeasurableSpace E] where
+  toFun : Ω → E
+  meas : Measurable toFun
 
 namespace RV
 
@@ -87,10 +87,10 @@ instance {X : RV Ω E} : IsProbabilityMeasure (law X) :=
 
 end RV
 
-@[ext] structure RV' (E : Type*) [MeasurableSpace E] :=
-  (carrier : Type*)
-  (hcarrier : ProbSpace carrier)
-  (toRV : RV carrier E)
+@[ext] structure RV' (E : Type*) [MeasurableSpace E] where
+  carrier : Type*
+  hcarrier : ProbSpace carrier
+  toRV : RV carrier E
 
 namespace RV'
 
